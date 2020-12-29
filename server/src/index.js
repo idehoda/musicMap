@@ -1,5 +1,6 @@
 require('./models/User');
 require('./models/Track');
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
@@ -8,11 +9,14 @@ const bodyParser = require('body-parser');
 const app = express();
 const auth = require('./middlewares/requireAuth');
 
+
 app.use(bodyParser.json());
 app.use(authRoutes);
 app.use(trackRoutes);
 
-const mongoUri = 'mongodb+srv://initial:initial@cluster0.tfz0c.mongodb.net/musicMapSandbox?retryWrites=true&w=majority'
+const { DB_USER, DB_PASS, DB_NAME } = process.env;
+const mongoUri = `mongodb+srv://${DB_USER}:${DB_PASS}@cluster0.tfz0c.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
+
 mongoose.connect(mongoUri, {
     useNewUrlParser: true,
     useCreateIndex: true,
