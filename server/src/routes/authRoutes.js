@@ -18,8 +18,8 @@ router.post('/signup', async (req, res) => {
         const token = jwt.sign({ userId: savedUser._id }, 'keeeey')
         res.json({ token })
     } catch (error) {
-        console.log('signup post router error', error)
-        res.status(500).send('something went wrong')
+        console.log('signup post router error')
+        res.status(400).send('something went wrong with signup')
     }
    
 })
