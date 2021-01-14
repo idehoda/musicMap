@@ -1,20 +1,33 @@
-import React, { useContext} from 'react';
-import { View, StyleSheet, Text, Button } from 'react-native';
-import { Context as AuthContext } from '../context/AuthContext';
+import React, { useContext } from 'react';
+import { FlatList, TouchableOpacity } from 'react-native';
+import { ListItem } from 'react-native-elements';
+import { Context as TrackContext } from '../context/TrackContext';
 
 const TrackListScreen = ({ navigation }) => {
-    const { state, signup } = useContext(AuthContext);
+    const { fetchTracks, state } = useContext(TrackContext);
+    const unsubscribe = navigation.addListener('focus', e => {
+        fetchTracks()
+      });
     return (
         <>
-            <Text style={{ fontSize: 48}}> TrackList screen </Text>
-            <Button 
-                title="Go on track detail" 
-                onPress={() => navigation.navigate('TrackDetailScreen')}
+            <FlatList 
+                data={state}
+                keyExtractor={item => item._id}
+                renderItem={({ item }) => {
+                    return (
+                        <TouchableOpacity onPress={() => navigation.navigate('TrackDetailScreen', { id: item._id })}>
+                            <ListItem>
+                                <ListItem.Content>
+                                    <ListItem.Title>{item.name}</ListItem.Title>
+                                </ListItem.Content>
+                                <ListItem.Chevron />
+                            </ListItem>
+                        </TouchableOpacity> 
+                    )
+                }}
             />
         </>
     )
 }
-
-const styles = StyleSheet.create({})
 
 export default TrackListScreen;

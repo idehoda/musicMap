@@ -1,7 +1,7 @@
 import createDataContext from './createDataContext';
 import trackerApi from '../api/tracker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { navigate } from '../navigationRef';
+import * as RootNavigation from '../navigationRef'
 
 const authReducer = (state, action) => {
     switch (action.type) {
@@ -22,9 +22,9 @@ const tryLocalSignIn = dispatch => async () => {
     const token = await AsyncStorage.getItem('token');
     if (token) {
         dispatch({ type: 'SIGNIN', payload: token });
-        navigate('TrackListScreen');
+        RootNavigation.navigate('MainFlow', { screen: 'TrackListScreen' } );
     } else {
-        navigate('SignupScreen')
+        RootNavigation.navigate('LoginFlow', { screen: 'SignupScreen' } );
     }
 }
 
@@ -36,7 +36,7 @@ const signup = (dispatch) => async ({ email, password }) => {
         const response = await trackerApi.post('/signup', { email, password });
         await AsyncStorage.setItem('token', response.data.token);
         dispatch({ type: 'SIGNIN', payload: response.data.token });
-        navigate('TrackListScreen');
+        RootNavigation.navigate('MainFlow', { screen: 'TrackListScreen' } );
     } catch (error) {
         dispatch({ type: 'ADD_ERROR', payload: error.response.data })
         console.log('signup error!', error.response.data)
@@ -48,7 +48,7 @@ const signin = (dispatch) => async ({ email, password }) => {
         const response = await trackerApi.post('/login', { email, password });
         await AsyncStorage.setItem('token', response.data.token);
         dispatch({ type: 'SIGNIN', payload: response.data.token });
-        navigate('TrackListScreen');
+        RootNavigation.navigate('MainFlow', { screen: 'TrackListScreen' } );
     } catch (error) {
         dispatch({ type: 'ADD_ERROR', payload: error.response.data })
         console.log('signup error!', error.response.data)
@@ -58,7 +58,7 @@ const signin = (dispatch) => async ({ email, password }) => {
 const logout = dispatch => async () => {
     await AsyncStorage.removeItem('token');
     dispatch({ type: 'LOGOUT' });
-    navigate('SignupScreen')
+    RootNavigation.navigate('LoginFlow', { screen: 'SignupScreen' } );
 }
 
 export const { Context, Provider } = createDataContext(

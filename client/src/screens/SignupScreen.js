@@ -25,12 +25,6 @@ const SignupScreen = ({ navigation }) => {
     ) 
 }
 
-SignupScreen.navigationOptions = () => {
-    return {
-        header: () => null
-    }
-}
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
